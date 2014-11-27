@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Blogue Linux</string>
+    <string name="hello_world">Live!</string>
+    <string name="action_settings">Settings</string>
+    <string name="erreurIllegalArgument">erreurIllegalArgument</string>
+    <string name="erreurIllegalState">erreurIllegalState</string>
+    <string name="erreurIO">erreurIO</string>
+
+
+</resources>
