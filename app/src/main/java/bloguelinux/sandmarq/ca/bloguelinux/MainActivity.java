@@ -18,9 +18,9 @@ import java.io.IOException;
 public class MainActivity extends ActionBarActivity {
     String url = "http://live.bloguelinux.ca/"; // your URL here
     MediaPlayer mediaPlayer = new MediaPlayer();
-    Button bPlay ;
+    Button bPlay;
     Button bPause;
-    Button bStop ;
+    Button bStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,30 +29,13 @@ public class MainActivity extends ActionBarActivity {
         bPlay = (Button) findViewById(R.id.bPlay);
         bPause = (Button) findViewById(R.id.bPause);
         bStop = (Button) findViewById(R.id.bStop);
-        bPlay.setClickable(false);
-        bPlay.setEnabled(false);
+
+        bPlay.setClickable(true);
+        bPlay.setEnabled(true);
         bPause.setClickable(false);
         bPause.setEnabled(false);
         bStop.setClickable(false);
         bStop.setEnabled(false);
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mediaPlayer.prepare(); // might take long! (for buffering, etc)
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mediaPlayer.start();
-        bPlay.setClickable(true);
-        bPlay.setEnabled(true);
-        bPause.setClickable(true);
-        bPause.setEnabled(true);
-        bStop.setClickable(true);
-        bStop.setEnabled(true);
 
     }
 
@@ -85,30 +68,45 @@ public class MainActivity extends ActionBarActivity {
         bPause.setEnabled(true);
         bStop.setClickable(true);
         bStop.setEnabled(true);
+        try {
+            mediaPlayer.setDataSource(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            mediaPlayer.prepare(); // might take long! (for buffering, etc)
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mediaPlayer.start();
     }
 
 
     public void pause(View view) {
+        bPlay.setClickable(false);
+        bPlay.setEnabled(false);
+        bPause.setClickable(true);
+        bPause.setEnabled(true);
+        bStop.setClickable(true);
+        bStop.setEnabled(true);
+
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        } else {
+            mediaPlayer.start();
+        }
+    }
+
+
+    public void stop(View view) {
         bPlay.setClickable(true);
         bPlay.setEnabled(true);
         bPause.setClickable(false);
         bPause.setEnabled(false);
         bStop.setClickable(false);
         bStop.setEnabled(false);
-        mediaPlayer.pause();
-    }
-
-
-    public void stop(View view) {
-        bPlay.setClickable(false);
-        bPlay.setEnabled(false);
-        bPause.setClickable(false);
-        bPause.setEnabled(false);
-        bStop.setClickable(false);
-        bStop.setEnabled(false);
         mediaPlayer.stop();
-
+        mediaPlayer.reset();
     }
 
     @Override
