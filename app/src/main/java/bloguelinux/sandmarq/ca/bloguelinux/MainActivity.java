@@ -64,21 +64,30 @@ public class MainActivity extends ActionBarActivity {
     public void play(View view) {
         bPlay.setClickable(false);
         bPlay.setEnabled(false);
-        bPause.setClickable(true);
-        bPause.setEnabled(true);
-        bStop.setClickable(true);
-        bStop.setEnabled(true);
+        bPause.setClickable(false);
+        bPause.setEnabled(false);
+        bStop.setClickable(false);
+        bStop.setEnabled(false);
         try {
             mediaPlayer.setDataSource(url);
+			mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            mediaPlayer.prepare(); // might take long! (for buffering, etc)
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mediaPlayer.start();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+				@Override
+				public void onPrepared(MediaPlayer player) {
+					player.start();
+					bPlay.setClickable(false);
+					bPlay.setEnabled(false);
+					bPause.setClickable(true);
+					bPause.setEnabled(true);
+					bStop.setClickable(true);
+					bStop.setEnabled(true);
+				}
+
+			});
     }
 
 
