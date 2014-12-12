@@ -13,6 +13,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
+import android.widget.*;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -21,6 +22,7 @@ public class MainActivity extends ActionBarActivity {
     Button bPlay;
     Button bPause;
     Button bStop;
+	TextView tvMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class MainActivity extends ActionBarActivity {
         bPlay = (Button) findViewById(R.id.bPlay);
         bPause = (Button) findViewById(R.id.bPause);
         bStop = (Button) findViewById(R.id.bStop);
+		tvMsg = (TextView) findViewById(R.id.tvMsg);
 
         bPlay.setClickable(true);
         bPlay.setEnabled(true);
@@ -36,6 +39,7 @@ public class MainActivity extends ActionBarActivity {
         bPause.setEnabled(false);
         bStop.setClickable(false);
         bStop.setEnabled(false);
+		tvMsg.setText("Presse play to start");
 
     }
 
@@ -69,10 +73,13 @@ public class MainActivity extends ActionBarActivity {
         bStop.setClickable(false);
         bStop.setEnabled(false);
         try {
+			tvMsg.setText("Opening URL " + url);
             mediaPlayer.setDataSource(url);
+			tvMsg.setText("Buffering " + url);
 			mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
         } catch (IOException e) {
             e.printStackTrace();
+			tvMsg.setText(e.toString());
         }
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
@@ -85,6 +92,7 @@ public class MainActivity extends ActionBarActivity {
 					bPause.setEnabled(true);
 					bStop.setClickable(true);
 					bStop.setEnabled(true);
+					tvMsg.setText(player.getTrackInfo().toString());
 				}
 
 			});
@@ -101,8 +109,10 @@ public class MainActivity extends ActionBarActivity {
 
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
+			tvMsg.setText("Paused");
         } else {
             mediaPlayer.start();
+			tvMsg.setText("Playing");
         }
     }
 
@@ -116,6 +126,7 @@ public class MainActivity extends ActionBarActivity {
         bStop.setEnabled(false);
         mediaPlayer.stop();
         mediaPlayer.reset();
+		tvMsg.setText("Presse play to start");
     }
 
     @Override
