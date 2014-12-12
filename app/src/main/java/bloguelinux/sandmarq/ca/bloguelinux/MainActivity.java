@@ -1,5 +1,6 @@
 package bloguelinux.sandmarq.ca.bloguelinux;
 
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
         bPause.setEnabled(false);
         bStop.setClickable(false);
         bStop.setEnabled(false);
-        tvMsg.setText("Presse play to start");
+        tvMsg.setText("Press play to start");
 
     }
 
@@ -71,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
         bPause.setEnabled(false);
         bStop.setClickable(false);
         bStop.setEnabled(false);
+
         try {
             tvMsg.setText("Opening URL " + url);
             mediaPlayer.setDataSource(MainActivity.this, myUri);
@@ -90,7 +92,6 @@ public class MainActivity extends ActionBarActivity {
                 bPause.setEnabled(true);
                 bStop.setClickable(true);
                 bStop.setEnabled(true);
-                //tvMsg.setText(player.getTrackInfo().toString());
                 tvMsg.setText("Playing " + url);
                 mediaPlayer.start();
             }
@@ -126,7 +127,7 @@ public class MainActivity extends ActionBarActivity {
         bStop.setEnabled(false);
         mediaPlayer.stop();
         mediaPlayer.reset();
-        tvMsg.setText("Presse play to start");
+        tvMsg.setText("Press play to start");
     }
 
     @Override
