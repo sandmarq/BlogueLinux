@@ -84,8 +84,6 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                //if (player.equals(mediaPlayer)) isReady_mediaPlayer = true;
-                //Log.e("I", "Media player has been loaded to memory !");
                 bPlay.setClickable(false);
                 bPlay.setEnabled(false);
                 bPause.setClickable(true);
