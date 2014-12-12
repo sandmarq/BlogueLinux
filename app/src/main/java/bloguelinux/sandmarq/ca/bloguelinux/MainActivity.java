@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -16,13 +18,41 @@ import java.io.IOException;
 public class MainActivity extends ActionBarActivity {
     String url = "http://live.bloguelinux.ca/"; // your URL here
     MediaPlayer mediaPlayer = new MediaPlayer();
+    Button bPlay ;
+    Button bPause;
+    Button bStop ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        preparePlayer();
+        bPlay = (Button) findViewById(R.id.bPlay);
+        bPause = (Button) findViewById(R.id.bPause);
+        bStop = (Button) findViewById(R.id.bStop);
+        bPlay.setClickable(false);
+        bPlay.setEnabled(false);
+        bPause.setClickable(false);
+        bPause.setEnabled(false);
+        bStop.setClickable(false);
+        bStop.setEnabled(false);
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            mediaPlayer.prepare(); // might take long! (for buffering, etc)
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mediaPlayer.start();
+        bPlay.setClickable(true);
+        bPlay.setEnabled(true);
+        bPause.setClickable(true);
+        bPause.setEnabled(true);
+        bStop.setClickable(true);
+        bStop.setEnabled(true);
 
     }
 
@@ -48,60 +78,45 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    public void play(View view) {
+        bPlay.setClickable(false);
+        bPlay.setEnabled(false);
+        bPause.setClickable(true);
+        bPause.setEnabled(true);
+        bStop.setClickable(true);
+        bStop.setEnabled(true);
+        mediaPlayer.start();
     }
 
-    private void preparePlayer() {
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    mediaPlayer.reset();
-                    Log.e("tag", "Media Player onError callback!");
-                    return true;
-                }
-            });
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                public void onPrepared(MediaPlayer mp) {
-                    ToggleButton playButton = (ToggleButton) findViewById(R.id.playToggleButton);
-                    playButton.setClickable(true);
-                    mp.start();
-                }
-            });
-        }
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(url);
-            mediaPlayer.prepareAsync();
 
-        } catch (IllegalArgumentException e) {
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.erreurIllegalArgument), Toast.LENGTH_LONG).show();
-            Log.e("tag", e.getMessage(), e);
-        } catch (IllegalStateException e) {
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.erreurIllegalState), Toast.LENGTH_LONG).show();
-            Log.e("tag", e.getMessage(), e);
-        } catch (IOException e) {
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.erreurIO), Toast.LENGTH_LONG).show();
-            Log.e("tag", e.getMessage(), e);
-        }
+    public void pause(View view) {
+        bPlay.setClickable(true);
+        bPlay.setEnabled(true);
+        bPause.setClickable(false);
+        bPause.setEnabled(false);
+        bStop.setClickable(false);
+        bStop.setEnabled(false);
+        mediaPlayer.pause();
     }
 
-    private void releaseMediaPlayer() {
-        if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+
+    public void stop(View view) {
+        bPlay.setClickable(false);
+        bPlay.setEnabled(false);
+        bPause.setClickable(false);
+        bPause.setEnabled(false);
+        bStop.setClickable(false);
+        bStop.setEnabled(false);
+        mediaPlayer.stop();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        releaseMediaPlayer();
+        mediaPlayer.release();
+        mediaPlayer = null;
     }
 
 }
+
