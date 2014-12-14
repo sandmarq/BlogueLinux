@@ -2,5 +2,13 @@
 <resources>
     <string name="app_name">Blogue Linux</string>
     <string name="action_settings">Propriétés</string>
-    <string name="hello_world">En Directe!</string>
+    <string name="hello_world">En Direct!</string>
+    <string name="tvPressP">Appuyer Jouer pour débuter</string>
+    <string name="bPlay">Jouer</string>
+    <string name="bStop">Arrêter</string>
+    <string name="bPause">Pause</string>
+    <string name="txOpen">Ouverture de l'URL</string>
+    <string name="txBuff">Chargement de</string>
+    <string name="txPlay">Joue</string>
+    <string name="txPause">En Pause</string>
 </resources>

@@ -7,6 +7,14 @@
     <string name="erreurIllegalArgument" translatable="false">erreurIllegalArgument</string>
     <string name="erreurIllegalState" translatable="false">erreurIllegalState</string>
     <string name="erreurIO" translatable="false">erreurIO</string>
+    <string name="tvPressP">Press play to start</string>
+    <string name="bPlay">Play</string>
+    <string name="bStop">Stop</string>
+    <string name="bPause">Pause</string>
+    <string name="txOpen">Opening URL</string>
+    <string name="txBuff">Buffering</string>
+    <string name="txPlay">Playing</string>
+    <string name="txPause">Paused</string>
 
 
 </resources>

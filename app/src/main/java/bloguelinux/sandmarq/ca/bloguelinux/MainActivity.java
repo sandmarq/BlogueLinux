@@ -1,5 +1,6 @@
 package bloguelinux.sandmarq.ca.bloguelinux;
 
+import android.content.res.Resources;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -39,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
         bPause.setEnabled(false);
         bStop.setClickable(false);
         bStop.setEnabled(false);
-        tvMsg.setText("Press play to start");
+        tvMsg.setText(String.format(getResources().getString(R.string.tvPressP)));
 
     }
 
@@ -74,13 +75,13 @@ public class MainActivity extends ActionBarActivity {
         bStop.setEnabled(false);
 
         try {
-            tvMsg.setText("Opening URL " + url);
+            tvMsg.setText(getResources().getString(R.string.txOpen) + " " + url);
             mediaPlayer.setDataSource(MainActivity.this, myUri);
         } catch (IOException e) {
             Log.e("tag", e.getMessage(), e);
             tvMsg.setText(e.toString());
         }
-        tvMsg.setText("Buffering " + url);
+        tvMsg.setText(getResources().getString(R.string.txBuff) + " " + url);
         mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
@@ -92,7 +93,7 @@ public class MainActivity extends ActionBarActivity {
                 bPause.setEnabled(true);
                 bStop.setClickable(true);
                 bStop.setEnabled(true);
-                tvMsg.setText("Playing " + url);
+                tvMsg.setText(getResources().getString(R.string.txPlay) + " " + url);
                 mediaPlayer.start();
             }
 
@@ -110,10 +111,10 @@ public class MainActivity extends ActionBarActivity {
 
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            tvMsg.setText("Paused " + url);
+            tvMsg.setText(getResources().getString(R.string.txPause) + " " + url);
         } else {
             mediaPlayer.start();
-            tvMsg.setText("Playing  " + url);
+            tvMsg.setText(getResources().getString(R.string.txPlay) + " " + url);
         }
     }
 
@@ -127,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
         bStop.setEnabled(false);
         mediaPlayer.stop();
         mediaPlayer.reset();
-        tvMsg.setText("Press play to start");
+        tvMsg.setText(String.format(getResources().getString(R.string.tvPressP)));
     }
 
     @Override
@@ -138,4 +139,3 @@ public class MainActivity extends ActionBarActivity {
     }
 
 }
-
