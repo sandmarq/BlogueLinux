@@ -7,7 +7,7 @@
     <string name="bPlay">Jouer</string>
     <string name="bStop">Arrêter</string>
     <string name="bPause">Pause</string>
-    <string name="txOpen">Ouverture de l'URL</string>
+    <string name="txOpen">Ouverture de l\'URL</string>
     <string name="txBuff">Chargement de</string>
     <string name="txPlay">Joue</string>
     <string name="txPause">En Pause</string>
