@@ -1,9 +1,5 @@
 package bloguelinux.sandmarq.ca.bloguelinux;
 
-import android.content.res.Resources;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -13,8 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.io.IOException;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -44,8 +38,6 @@ public class MainActivity extends ActionBarActivity {
 
         if (savedInstanceState != null) {
             status = savedInstanceState.getInt(KEY_INDEX, status);
-        } else {
-            status =0;
         }
         myHandler.postDelayed(UpdateInterface, 500);
     }
@@ -90,10 +82,36 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "Destroyed() called");
-        mediaPlayer.Release();
+        if (isFinishing()) {
+            Log.d(TAG, "onDestroyed() called");
+            mediaPlayer.Release();
+        }
     }
 
     // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
@@ -102,7 +120,7 @@ public class MainActivity extends ActionBarActivity {
             if (mediaPlayer != null) {
                 status = mediaPlayer.getStatus();
             }
-            switch (status){
+            switch (status) {
                 case 0: // Stop
                     bPlay.setClickable(true);
                     bPlay.setEnabled(true);
