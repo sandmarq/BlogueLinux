@@ -19,7 +19,7 @@ public class MainActivity extends ActionBarActivity {
     String url = "http://live.bloguelinux.ca/"; // your URL here
     //Uri myUri = Uri.parse(url);
     private Handler myHandler = new Handler();
-    private int status;
+    private int statusint;
     Player mediaPlayer = new Player(url);
     Button bPlay;
     Button bPause;
@@ -37,8 +37,9 @@ public class MainActivity extends ActionBarActivity {
         tvMsg = (TextView) findViewById(R.id.tvMsg);
 
         if (savedInstanceState != null) {
-            status = savedInstanceState.getInt(KEY_INDEX, status);
+            statusint = savedInstanceState.getInt(KEY_INDEX);
         }
+
         myHandler.postDelayed(UpdateInterface, 500);
     }
 
@@ -117,10 +118,10 @@ public class MainActivity extends ActionBarActivity {
     // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
     private Runnable UpdateInterface = new Runnable() {
         public void run() {
-            if (mediaPlayer != null) {
-                status = mediaPlayer.getStatus();
+            if (mediaPlayer != null){
+                statusint = mediaPlayer.getStatus();
             }
-            switch (status) {
+            switch (statusint) {
                 case 0: // Stop
                     bPlay.setClickable(true);
                     bPlay.setEnabled(true);
@@ -175,6 +176,13 @@ public class MainActivity extends ActionBarActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
-        savedInstanceState.putInt(KEY_INDEX, status);
+        savedInstanceState.putInt(KEY_INDEX, statusint);
     }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        statusint = savedInstanceState.getInt(KEY_INDEX);
+    }
+
 }
