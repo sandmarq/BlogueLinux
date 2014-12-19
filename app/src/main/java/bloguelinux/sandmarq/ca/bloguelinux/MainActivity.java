@@ -138,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(false);
                     bStop.setClickable(true);
                     bStop.setEnabled(true);
-                    tvMsg.setText(String.format(getResources().getString(R.string.txOpen)));
+                    tvMsg.setText(String.format(getResources().getString(R.string.txOpen) + " " + url));
                     break;
                 case 2: // buffering
                     bPlay.setClickable(false);
@@ -147,7 +147,7 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(false);
                     bStop.setClickable(true);
                     bStop.setEnabled(true);
-                    tvMsg.setText(String.format(getResources().getString(R.string.txBuff)));
+                    tvMsg.setText(String.format(getResources().getString(R.string.txBuff) + " " + url));
                     break;
                 case 3: // paused
                     bPlay.setClickable(false);
@@ -165,7 +165,7 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(true);
                     bStop.setClickable(true);
                     bStop.setEnabled(true);
-                    tvMsg.setText(String.format(getResources().getString(R.string.txPlay)));
+                    tvMsg.setText(String.format(getResources().getString(R.string.txPlay) + " " + url));
                     break;
             }
             myHandler.postDelayed(this, 500);
