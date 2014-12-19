@@ -18,9 +18,14 @@ import java.io.IOException;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private static final String TAG = "BlogueLinux";
+    private static final String KEY_INDEX = "status";
+
     String url = "http://live.bloguelinux.ca/"; // your URL here
     //Uri myUri = Uri.parse(url);
     private Handler myHandler = new Handler();
+    private int status;
     Player mediaPlayer = new Player(url);
     Button bPlay;
     Button bPause;
@@ -30,21 +35,19 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main);
         bPlay = (Button) findViewById(R.id.bPlay);
         bPause = (Button) findViewById(R.id.bPause);
         bStop = (Button) findViewById(R.id.bStop);
         tvMsg = (TextView) findViewById(R.id.tvMsg);
 
-
-        bPlay.setClickable(true);
-        bPlay.setEnabled(true);
-        bPause.setClickable(false);
-        bPause.setEnabled(false);
-        bStop.setClickable(false);
-        bStop.setEnabled(false);
-        tvMsg.setText(String.format(getResources().getString(R.string.tvPressP)));
-
+        if (savedInstanceState != null) {
+            status = savedInstanceState.getInt(KEY_INDEX, status);
+        } else {
+            status =0;
+        }
+        myHandler.postDelayed(UpdateInterface, 500);
     }
 
     @Override
@@ -70,30 +73,36 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void play(View view) {
-       mediaPlayer.Play();
-        myHandler.postDelayed(UpdateInterface, 500);
+        Log.d(TAG, "play() called");
+        mediaPlayer.Play();
     }
 
 
     public void pause(View view) {
+        Log.d(TAG, "pause() called");
         mediaPlayer.Pause();
     }
 
 
     public void stop(View view) {
+        Log.d(TAG, "stop() called");
         mediaPlayer.Stop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "Destroyed() called");
         mediaPlayer.Release();
     }
 
     // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
     private Runnable UpdateInterface = new Runnable() {
         public void run() {
-            switch (mediaPlayer.getStatus()){
+            if (mediaPlayer != null) {
+                status = mediaPlayer.getStatus();
+            }
+            switch (status){
                 case 0: // Stop
                     bPlay.setClickable(true);
                     bPlay.setEnabled(true);
@@ -144,4 +153,10 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, status);
+    }
 }
