@@ -5,6 +5,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -18,8 +19,9 @@ import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
     String url = "http://live.bloguelinux.ca/"; // your URL here
-    Uri myUri = Uri.parse(url);
-    MediaPlayer mediaPlayer = new MediaPlayer();
+    //Uri myUri = Uri.parse(url);
+    private Handler myHandler = new Handler();
+    Player mediaPlayer = new Player(url);
     Button bPlay;
     Button bPause;
     Button bStop;
@@ -33,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
         bPause = (Button) findViewById(R.id.bPause);
         bStop = (Button) findViewById(R.id.bStop);
         tvMsg = (TextView) findViewById(R.id.tvMsg);
+
 
         bPlay.setClickable(true);
         bPlay.setEnabled(true);
@@ -67,75 +70,78 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void play(View view) {
-        bPlay.setClickable(false);
-        bPlay.setEnabled(false);
-        bPause.setClickable(false);
-        bPause.setEnabled(false);
-        bStop.setClickable(false);
-        bStop.setEnabled(false);
-
-        try {
-            tvMsg.setText(getResources().getString(R.string.txOpen) + " " + url);
-            mediaPlayer.setDataSource(MainActivity.this, myUri);
-        } catch (IOException e) {
-            Log.e("tag", e.getMessage(), e);
-            tvMsg.setText(e.toString());
-        }
-        tvMsg.setText(getResources().getString(R.string.txBuff) + " " + url);
-        mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                bPlay.setClickable(false);
-                bPlay.setEnabled(false);
-                bPause.setClickable(true);
-                bPause.setEnabled(true);
-                bStop.setClickable(true);
-                bStop.setEnabled(true);
-                tvMsg.setText(getResources().getString(R.string.txPlay) + " " + url);
-                mediaPlayer.start();
-            }
-
-        });
+       mediaPlayer.Play();
+        myHandler.postDelayed(UpdateInterface, 500);
     }
 
 
     public void pause(View view) {
-        bPlay.setClickable(false);
-        bPlay.setEnabled(false);
-        bPause.setClickable(true);
-        bPause.setEnabled(true);
-        bStop.setClickable(true);
-        bStop.setEnabled(true);
-
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            tvMsg.setText(getResources().getString(R.string.txPause) + " " + url);
-        } else {
-            mediaPlayer.start();
-            tvMsg.setText(getResources().getString(R.string.txPlay) + " " + url);
-        }
+        mediaPlayer.Pause();
     }
 
 
     public void stop(View view) {
-        bPlay.setClickable(true);
-        bPlay.setEnabled(true);
-        bPause.setClickable(false);
-        bPause.setEnabled(false);
-        bStop.setClickable(false);
-        bStop.setEnabled(false);
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-        tvMsg.setText(String.format(getResources().getString(R.string.tvPressP)));
+        mediaPlayer.Stop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer.release();
-        mediaPlayer = null;
+        mediaPlayer.Release();
     }
+
+    // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
+    private Runnable UpdateInterface = new Runnable() {
+        public void run() {
+            switch (mediaPlayer.getStatus()){
+                case 0: // Stop
+                    bPlay.setClickable(true);
+                    bPlay.setEnabled(true);
+                    bPause.setClickable(false);
+                    bPause.setEnabled(false);
+                    bStop.setClickable(false);
+                    bStop.setEnabled(false);
+                    tvMsg.setText(String.format(getResources().getString(R.string.tvPressP)));
+                    break;
+                case 1: // Opening
+                    bPlay.setClickable(false);
+                    bPlay.setEnabled(false);
+                    bPause.setClickable(false);
+                    bPause.setEnabled(false);
+                    bStop.setClickable(true);
+                    bStop.setEnabled(true);
+                    tvMsg.setText(String.format(getResources().getString(R.string.txOpen)));
+                    break;
+                case 2: // buffering
+                    bPlay.setClickable(false);
+                    bPlay.setEnabled(false);
+                    bPause.setClickable(false);
+                    bPause.setEnabled(false);
+                    bStop.setClickable(true);
+                    bStop.setEnabled(true);
+                    tvMsg.setText(String.format(getResources().getString(R.string.txBuff)));
+                    break;
+                case 3: // paused
+                    bPlay.setClickable(false);
+                    bPlay.setEnabled(false);
+                    bPause.setClickable(true);
+                    bPause.setEnabled(true);
+                    bStop.setClickable(true);
+                    bStop.setEnabled(true);
+                    tvMsg.setText(String.format(getResources().getString(R.string.txPause)));
+                    break;
+                case 4: // playing
+                    bPlay.setClickable(false);
+                    bPlay.setEnabled(false);
+                    bPause.setClickable(true);
+                    bPause.setEnabled(true);
+                    bStop.setClickable(true);
+                    bStop.setEnabled(true);
+                    tvMsg.setText(String.format(getResources().getString(R.string.txPlay)));
+                    break;
+            }
+            myHandler.postDelayed(this, 500);
+        }
+    };
 
 }

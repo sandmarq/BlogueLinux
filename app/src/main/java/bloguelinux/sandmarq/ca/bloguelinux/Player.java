@@ -52,7 +52,7 @@ public class Player {
     public int Stop() {
         mediaPlayer.stop();
         mediaPlayer.reset();
-        status = 3;
+        status = 0;
         return status;
     }
 
