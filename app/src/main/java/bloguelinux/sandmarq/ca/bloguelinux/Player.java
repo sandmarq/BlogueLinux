@@ -11,8 +11,11 @@ import java.io.IOException;
  * Created by SANDRINE.MARQUIS on 2014-12-19.
  */
 public class Player {
+
+    private static final String TAG = "BlogueLinux|Player";
+
     private String url = null; // your URL here
-    private int status = 0; // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
+    private static int status = 0; // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
     private MediaPlayer mediaPlayer = new MediaPlayer();
 
     public int getStatus() {
@@ -41,8 +44,10 @@ public class Player {
 
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
                 status = 4;
+                Log.d(TAG, "Start playing");
+                Log.d(TAG, Integer.toString(status));
+                mediaPlayer.start();
             }
 
         });
@@ -74,6 +79,10 @@ public class Player {
 
     public Player(String url) {
         setUrl(url);
+    }
+
+    public boolean isPlaying(){
+        return mediaPlayer.isPlaying();
     }
 
 }
