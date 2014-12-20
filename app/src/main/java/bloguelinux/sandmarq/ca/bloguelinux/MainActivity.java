@@ -135,7 +135,12 @@ public class MainActivity extends ActionBarActivity {
         public void run() {
             if (mediaPlayer.isPlaying()){
                 statusint = 4;
+            } else if (mediaPlayer == null){
+                statusint = 0;
+            } else {
+                statusint = mediaPlayer.getStatus();
             }
+
             switch (statusint) {
                 case 0: // Stop
                     bPlay.setClickable(true);
