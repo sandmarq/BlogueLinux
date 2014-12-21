@@ -23,8 +23,8 @@ public class XmlParsingPod {
         return url;
     }
 
-    public void setUrl(String url2) {
-        this.url = url2;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getXmlFromUrl(String url) {
@@ -54,7 +54,6 @@ public class XmlParsingPod {
         return xmlContent;
     }
 
-    public XmlParsingPod(String url1) {
-        xmlContent = getXmlFromUrl(url1);
+    public XmlParsingPod() {
     }
 }
