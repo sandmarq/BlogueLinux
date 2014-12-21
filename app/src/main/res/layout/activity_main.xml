@@ -15,48 +15,55 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/tux" />
-	
-	<TextView
-		android:id="@+id/tvMsg"
+
+    <TextView
+        android:id="@+id/tvMsg"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
         android:layout_centerHorizontal="true"
-		android:layout_below="@id/imageView"
-        android:src="@drawable/tux" 
-		android:text="This is a test"
-		android:gravity="center" />
-		
+        android:gravity="center"
+        android:src="@drawable/tux"
+        android:text="This is a test" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/bPlay"
+        android:layout_below="@+id/tvMsg"
+        android:layout_centerHorizontal="true" />
 
     <Button
+        android:id="@+id/bPlay"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="@string/bPlay"
-        android:id="@+id/bPlay"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:clickable="false"
-        android:onClick="play" />
+        android:onClick="play"
+        android:text="@string/bPlay" />
 
     <Button
+        android:id="@+id/bPause"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="@string/bPause"
-        android:id="@+id/bPause"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:clickable="false"
-        android:onClick="pause" />
+        android:onClick="pause"
+        android:text="@string/bPause" />
 
     <Button
+        android:id="@+id/bStop"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="@string/bStop"
-        android:id="@+id/bStop"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:clickable="false"
-        android:onClick="stop" />
+        android:onClick="stop"
+        android:text="@string/bStop" />
 
 </RelativeLayout>
