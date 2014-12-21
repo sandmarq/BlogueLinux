@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/tux" />
@@ -29,7 +29,7 @@
 
     <Button
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:text="@string/bPlay"
         android:id="@+id/bPlay"
         android:layout_alignParentBottom="true"
@@ -40,7 +40,7 @@
 
     <Button
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:text="@string/bPause"
         android:id="@+id/bPause"
         android:layout_alignParentBottom="true"
@@ -50,7 +50,7 @@
 
     <Button
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:text="@string/bStop"
         android:id="@+id/bStop"
         android:layout_alignParentBottom="true"
