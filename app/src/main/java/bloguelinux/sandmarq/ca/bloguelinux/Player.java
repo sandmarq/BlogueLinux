@@ -1,8 +1,6 @@
 package bloguelinux.sandmarq.ca.bloguelinux;
 
-import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
@@ -76,13 +74,12 @@ public class Player {
         mediaPlayer.release();
         mediaPlayer = null;
     }
+    public boolean isPlaying(){
+        return mediaPlayer.isPlaying();
+    }
 
     public Player(String url) {
         setUrl(url);
-    }
-
-    public boolean isPlaying(){
-        return mediaPlayer.isPlaying();
     }
 
 }

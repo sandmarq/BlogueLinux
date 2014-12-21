@@ -1,6 +1,5 @@
 package bloguelinux.sandmarq.ca.bloguelinux;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,15 +17,23 @@ public class MainActivity extends ActionBarActivity {
     private static final String KEY_INDEX = "status";
 
     String url = "http://live.bloguelinux.ca/"; // your URL here
+    String urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast";
+    String urlAprescast = "http://feeds.feedburner.com/apres_cast";
+
     //Uri myUri = Uri.parse(url);
     private Handler myHandler = new Handler();
     private int statusint;
     private boolean restart = false;
+
     Player mediaPlayer = new Player(url);
+    XmlParsingPod xmlPocast = new XmlParsingPod(urlPodcast);
+    XmlParsingPod xmlAprescast = new XmlParsingPod(urlAprescast);
+
     Button bPlay;
     Button bPause;
     Button bStop;
     TextView tvMsg;
+    TextView tvTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +49,11 @@ public class MainActivity extends ActionBarActivity {
         bPause = (Button) findViewById(R.id.bPause);
         bStop = (Button) findViewById(R.id.bStop);
         tvMsg = (TextView) findViewById(R.id.tvMsg);
+        tvTest = (TextView) findViewById(R.id.listView);
 
         myHandler.postDelayed(UpdateInterface, 100);
+
+        tvTest.setText(xmlPocast.getXml());
     }
 
     @Override
