@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -19,6 +21,8 @@ public class MainActivity extends ActionBarActivity {
     String url = "http://live.bloguelinux.ca/"; // your URL here
     String urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast";
     String urlAprescast = "http://feeds.feedburner.com/apres_cast";
+    Long timer = 0L;
+    String sTimer;
 
     //Uri myUri = Uri.parse(url);
     private Handler myHandler = new Handler();
@@ -26,12 +30,13 @@ public class MainActivity extends ActionBarActivity {
     private boolean restart = false;
 
     Player mediaPlayer = new Player(url);
-    XmlParsingPod xmlPocast = new XmlParsingPod();
-    XmlParsingPod xmlAprescast = new XmlParsingPod();
+    //XmlParsingPod xmlPocast = new XmlParsingPod();
+    //XmlParsingPod xmlAprescast = new XmlParsingPod();
     Button bPlay;
     Button bPause;
     Button bStop;
     TextView tvMsg;
+    TextView tvTimer;
     TextView tvTest;
 
     @Override
@@ -48,13 +53,14 @@ public class MainActivity extends ActionBarActivity {
         bPause = (Button) findViewById(R.id.bPause);
         bStop = (Button) findViewById(R.id.bStop);
         tvMsg = (TextView) findViewById(R.id.tvMsg);
-        tvTest = (TextView) findViewById(R.id.listView);
+        //tvTest = (TextView) findViewById(R.id.listView);
+        tvTimer = (TextView) findViewById(R.id.tvTimer);
 
         myHandler.postDelayed(UpdateInterface, 100);
 
-        xmlPocast.setUrl(urlPodcast);
-        xmlAprescast.setUrl(urlAprescast);
-        tvTest.setText(xmlPocast.getXml() + " " + xmlAprescast.getXml());
+        //xmlPocast.setUrl(urlPodcast);
+        //xmlAprescast.setUrl(urlAprescast);
+        //tvTest.setText(xmlPocast.getXml() + " " + xmlAprescast.getXml());
     }
 
     @Override
@@ -97,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void stop(View view) {
         mediaPlayer.Stop();
+        timer = 0L;
         statusint = mediaPlayer.getStatus();
         Log.d(TAG, "stop() called");
         Log.d(TAG, Integer.toString(statusint));
@@ -144,9 +151,9 @@ public class MainActivity extends ActionBarActivity {
     // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
     private Runnable UpdateInterface = new Runnable() {
         public void run() {
-            if (mediaPlayer.isPlaying()){
+            if (mediaPlayer.isPlaying()) {
                 statusint = 4;
-            } else if (mediaPlayer == null){
+            } else if (mediaPlayer == null) {
                 statusint = 0;
             } else {
                 statusint = mediaPlayer.getStatus();
@@ -199,6 +206,19 @@ public class MainActivity extends ActionBarActivity {
                     tvMsg.setText(String.format(getResources().getString(R.string.txPlay) + " " + url));
                     break;
             }
+
+            if (mediaPlayer.isPlaying()) {
+                timer = timer + 100L;
+                //tvTimer.setText(Long.toString(timer / (1000*60*60)));
+            }
+            sTimer = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(timer),
+                    TimeUnit.MILLISECONDS.toMinutes(timer) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timer)), // The change is in this line
+                    TimeUnit.MILLISECONDS.toSeconds(timer) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timer)));
+            tvTimer.setText(sTimer);
+
             myHandler.postDelayed(this, 100);
         }
     };
@@ -209,20 +229,20 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onSaveInstanceState");
         Log.d(TAG, Integer.toString(statusint));
         savedInstanceState.putInt(KEY_INDEX, statusint);
-        if (mediaPlayer.isPlaying()){
+        /*if (mediaPlayer.isPlaying()) {
             mediaPlayer.Pause();
             statusint = 3;
             restart = true;
-        }
+        } */
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        statusint = savedInstanceState.getInt(KEY_INDEX,0);
-        if (restart == true){
+        statusint = savedInstanceState.getInt(KEY_INDEX, 0);
+        /* if (restart == true) {
             statusint = 4;
             mediaPlayer.Play();
-        }
+        } */
     }
 }

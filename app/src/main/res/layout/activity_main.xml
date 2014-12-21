@@ -17,16 +17,25 @@
         android:src="@drawable/tux" />
 
     <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="00:00:00" />
+
+    <TextView
         android:id="@+id/tvMsg"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView"
+        android:layout_below="@id/tvTimer"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:src="@drawable/tux"
         android:text="This is a test" />
 
-    <TextView
+    <ListView
         android:id="@+id/listView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
