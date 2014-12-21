@@ -22,6 +22,7 @@ public class MainActivity extends ActionBarActivity {
     //Uri myUri = Uri.parse(url);
     private Handler myHandler = new Handler();
     private int statusint;
+    private boolean restart = false;
     Player mediaPlayer = new Player(url);
     Button bPlay;
     Button bPause;
@@ -198,11 +199,20 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onSaveInstanceState");
         Log.d(TAG, Integer.toString(statusint));
         savedInstanceState.putInt(KEY_INDEX, statusint);
+        if (mediaPlayer.isPlaying()){
+            mediaPlayer.Pause();
+            statusint = 3;
+            restart = true;
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         statusint = savedInstanceState.getInt(KEY_INDEX,0);
+        if (restart == true){
+            statusint = 4;
+            mediaPlayer.Play();
+        }
     }
 }
