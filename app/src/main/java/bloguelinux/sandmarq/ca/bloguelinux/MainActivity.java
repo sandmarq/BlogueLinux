@@ -26,8 +26,8 @@ public class MainActivity extends ActionBarActivity {
     private boolean restart = false;
 
     Player mediaPlayer = new Player(url);
-    //XmlParsingPod xmlPocast = new XmlParsingPod(urlPodcast);
-    //XmlParsingPod xmlAprescast = new XmlParsingPod(urlAprescast);
+    XmlParsingPod xmlPocast = new XmlParsingPod(urlPodcast);
+    XmlParsingPod xmlAprescast = new XmlParsingPod(urlAprescast);
 
     Button bPlay;
     Button bPause;
@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
 
         myHandler.postDelayed(UpdateInterface, 100);
 
-        //tvTest.setText(xmlPocast.getXml());
+        tvTest.setText(xmlPocast.getXml());
     }
 
     @Override
