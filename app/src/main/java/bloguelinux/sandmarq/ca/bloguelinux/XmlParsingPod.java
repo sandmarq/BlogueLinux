@@ -51,6 +51,7 @@ public class XmlParsingPod {
     }
 
     public String getXml() {
+        xmlContent = getXmlFromUrl(url)
         return xmlContent;
     }
 
