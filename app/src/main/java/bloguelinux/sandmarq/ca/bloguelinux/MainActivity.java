@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
+import android.widget.*;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,7 +28,6 @@ public class MainActivity extends ActionBarActivity {
     //Uri myUri = Uri.parse(url);
     private Handler myHandler = new Handler();
     private int statusint;
-    private boolean restart = false;
 
     Player mediaPlayer = new Player(url);
     //XmlParsingPod xmlPocast = new XmlParsingPod();
@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
     Button bStop;
     TextView tvMsg;
     TextView tvTimer;
-    TextView tvTest;
+    ListView lvTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         bPause = (Button) findViewById(R.id.bPause);
         bStop = (Button) findViewById(R.id.bStop);
         tvMsg = (TextView) findViewById(R.id.tvMsg);
-        //tvTest = (TextView) findViewById(R.id.listView);
+        lvTest = (ListView) findViewById(R.id.listView);
         tvTimer = (TextView) findViewById(R.id.tvTimer);
 
         myHandler.postDelayed(UpdateInterface, 100);
@@ -229,20 +229,13 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onSaveInstanceState");
         Log.d(TAG, Integer.toString(statusint));
         savedInstanceState.putInt(KEY_INDEX, statusint);
-        /*if (mediaPlayer.isPlaying()) {
-            mediaPlayer.Pause();
-            statusint = 3;
-            restart = true;
-        } */
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+		Log.i(TAG, "onRestoreInstanceState");
+        Log.d(TAG, Integer.toString(statusint));
         statusint = savedInstanceState.getInt(KEY_INDEX, 0);
-        /* if (restart == true) {
-            statusint = 4;
-            mediaPlayer.Play();
-        } */
     }
 }
