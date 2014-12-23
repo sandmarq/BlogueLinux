@@ -21,8 +21,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView"
-        android:gravity="center"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:text="00:00:00" />
 
     <TextView

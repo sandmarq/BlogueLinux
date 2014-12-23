@@ -74,7 +74,8 @@ public class Player {
         mediaPlayer.release();
         mediaPlayer = null;
     }
-    public boolean isPlaying(){
+
+    public boolean isPlaying() {
         return mediaPlayer.isPlaying();
     }
 
@@ -82,4 +83,7 @@ public class Player {
         setUrl(url);
     }
 
+    public Player(){
+
+    }
 }

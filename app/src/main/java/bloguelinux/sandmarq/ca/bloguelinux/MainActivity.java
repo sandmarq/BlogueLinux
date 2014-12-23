@@ -2,6 +2,7 @@ package bloguelinux.sandmarq.ca.bloguelinux;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.renderscript.Sampler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
+
 import android.widget.*;
 
 
@@ -18,30 +20,31 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "BlogueLinux";
     private static final String KEY_INDEX = "status";
-
-    String url = "http://live.bloguelinux.ca/"; // your URL here
-    String urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast";
-    String urlAprescast = "http://feeds.feedburner.com/apres_cast";
-    Long timer = 0L;
-    String sTimer;
-
-    //Uri myUri = Uri.parse(url);
+    private ShowsList[] mlist = new ShowsList[]{
+            new ShowsList("Live", "Live feed", "http://live.bloguelinux.ca/", "http://live.bloguelinux.ca/"),
+            new ShowsList("Émission #74 du 18 décembre 2014 – Les dents me pètent dans yeule", "Bonne fête bloguelinux a 3 ans", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_74.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_74.ogg"),
+            new ShowsList("L'après CAST – Émission #25 du 14 décembre 2014", "AprèsCast", "http://www.bloguelinux.ca/wp-content/uploads/apres_cast/ap_emission_25.mp3", "http://www.bloguelinux.ca/wp-content/uploads/apres_cast/ap_emission_25.ogg"),
+    };
     private Handler myHandler = new Handler();
     private int statusint;
-
-    Player mediaPlayer = new Player(url);
-    //XmlParsingPod xmlPocast = new XmlParsingPod();
-    //XmlParsingPod xmlAprescast = new XmlParsingPod();
-    Button bPlay;
-    Button bPause;
-    Button bStop;
-    TextView tvMsg;
-    TextView tvTimer;
-    ListView lvTest;
+    private String url = "http://live.bloguelinux.ca/"; // your URL here
+    private String urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast";
+    private String urlAprescast = "http://feeds.feedburner.com/apres_cast";
+    private Long timer = 0L;
+    private String sTimer;
+    private Player mediaPlayer = new Player();
+    private Button bPlay;
+    private Button bPause;
+    private Button bStop;
+    private TextView tvMsg;
+    private TextView tvTimer;
+    private ListView lvTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final ListAdapter listAdapter = new MyAdapterShowList(this,mlist);
 
         if (savedInstanceState == null) {
             statusint = 0;
@@ -56,11 +59,20 @@ public class MainActivity extends ActionBarActivity {
         lvTest = (ListView) findViewById(R.id.listView);
         tvTimer = (TextView) findViewById(R.id.tvTimer);
 
-        myHandler.postDelayed(UpdateInterface, 100);
+        lvTest.setAdapter(listAdapter);
 
-        //xmlPocast.setUrl(urlPodcast);
-        //xmlAprescast.setUrl(urlAprescast);
-        //tvTest.setText(xmlPocast.getXml() + " " + xmlAprescast.getXml());
+        lvTest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mediaPlayer.setUrl(mlist[position].getLienOgg());
+                mediaPlayer.Play();
+                statusint = mediaPlayer.getStatus();
+                Log.d(TAG, "playing selection() called");
+                Log.d(TAG, Integer.toString(statusint));
+            }
+        });
+
+        myHandler.postDelayed(UpdateInterface, 100);
     }
 
     @Override
@@ -86,6 +98,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void play(View view) {
+        mediaPlayer.setUrl(url);
         mediaPlayer.Play();
         statusint = mediaPlayer.getStatus();
         Log.d(TAG, "play() called");
@@ -167,7 +180,6 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(false);
                     bStop.setClickable(false);
                     bStop.setEnabled(false);
-                    tvMsg.setText(String.format(getResources().getString(R.string.tvPressP)));
                     break;
                 case 1: // Opening
                     bPlay.setClickable(false);
@@ -234,7 +246,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-		Log.i(TAG, "onRestoreInstanceState");
+        Log.i(TAG, "onRestoreInstanceState");
         Log.d(TAG, Integer.toString(statusint));
         statusint = savedInstanceState.getInt(KEY_INDEX, 0);
     }
