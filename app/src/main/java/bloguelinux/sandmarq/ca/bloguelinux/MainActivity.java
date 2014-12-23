@@ -37,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
     private Button bPause;
     private Button bStop;
     private TextView tvMsg;
+    private String message;
     private TextView tvTimer;
     private ListView lvTest;
 
@@ -69,6 +70,7 @@ public class MainActivity extends ActionBarActivity {
                 statusint = mediaPlayer.getStatus();
                 Log.d(TAG, "playing selection() called");
                 Log.d(TAG, Integer.toString(statusint));
+                message = String.format(getResources().getString(R.string.txPlay) + " " + mlist[position].getTitre());
             }
         });
 
@@ -101,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
         mediaPlayer.setUrl(url);
         mediaPlayer.Play();
         statusint = mediaPlayer.getStatus();
+        message = String.format(getResources().getString(R.string.txPlay) + " " + url);
         Log.d(TAG, "play() called");
         Log.d(TAG, Integer.toString(statusint));
     }
@@ -109,6 +112,7 @@ public class MainActivity extends ActionBarActivity {
     public void pause(View view) {
         mediaPlayer.Pause();
         statusint = mediaPlayer.getStatus();
+        message = String.format(getResources().getString(R.string.txPause) + " " + url);
         Log.d(TAG, "pause() called");
         Log.d(TAG, Integer.toString(statusint));
     }
@@ -118,6 +122,7 @@ public class MainActivity extends ActionBarActivity {
         mediaPlayer.Stop();
         timer = 0L;
         statusint = mediaPlayer.getStatus();
+        message = String.format(getResources().getString(R.string.txOpen) + " " + url);
         Log.d(TAG, "stop() called");
         Log.d(TAG, Integer.toString(statusint));
     }
@@ -127,6 +132,7 @@ public class MainActivity extends ActionBarActivity {
         super.onStart();
         Log.d(TAG, "onStart() called");
         Log.d(TAG, Integer.toString(statusint));
+        message = String.format(getResources().getString(R.string.txOpen) + " " + url);
     }
 
     @Override
@@ -134,6 +140,7 @@ public class MainActivity extends ActionBarActivity {
         super.onPause();
         Log.d(TAG, "onPause() called");
         Log.d(TAG, Integer.toString(statusint));
+        message = String.format(getResources().getString(R.string.txPause) + " " + url);
     }
 
     @Override
@@ -188,7 +195,7 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(false);
                     bStop.setClickable(true);
                     bStop.setEnabled(true);
-                    tvMsg.setText(String.format(getResources().getString(R.string.txOpen) + " " + url));
+                    tvMsg.setText(message);
                     break;
                 case 2: // buffering
                     bPlay.setClickable(false);
@@ -197,7 +204,7 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(false);
                     bStop.setClickable(true);
                     bStop.setEnabled(true);
-                    tvMsg.setText(String.format(getResources().getString(R.string.txBuff) + " " + url));
+                    tvMsg.setText(message);
                     break;
                 case 3: // paused
                     bPlay.setClickable(false);
@@ -206,7 +213,7 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(true);
                     bStop.setClickable(true);
                     bStop.setEnabled(true);
-                    tvMsg.setText(String.format(getResources().getString(R.string.txPause)));
+                    tvMsg.setText(message);
                     break;
                 case 4: // playing
                     bPlay.setClickable(false);
@@ -215,7 +222,7 @@ public class MainActivity extends ActionBarActivity {
                     bPause.setEnabled(true);
                     bStop.setClickable(true);
                     bStop.setEnabled(true);
-                    tvMsg.setText(String.format(getResources().getString(R.string.txPlay) + " " + url));
+                    tvMsg.setText(message);
                     break;
             }
 
