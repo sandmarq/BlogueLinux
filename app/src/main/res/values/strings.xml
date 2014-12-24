@@ -15,6 +15,8 @@
     <string name="txBuff">Buffering</string>
     <string name="txPlay">Playing</string>
     <string name="txPause">Paused</string>
+    <string name="text_menu_exit">Exit</string>
+    <string name="text_menu_about">About</string>
 
 
 </resources>

@@ -1,8 +1,8 @@
 package bloguelinux.sandmarq.ca.bloguelinux;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Handler;
-import android.renderscript.Sampler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -94,6 +94,19 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.menu_exit){
+            Log.d(TAG, "finish() called");
+            if (mediaPlayer != null){
+                mediaPlayer.Release();
+            }
+            myHandler.removeCallbacks(UpdateInterface);
+            finish();
+        } else if (id == R.id.menu_about){
+
+            DialogFragment myDialogFragmentAbout = new MyDialogFragmentAbout();
+
+            myDialogFragmentAbout.show(getFragmentManager(), "theDialogAbout");
+
         }
 
         return super.onOptionsItemSelected(item);

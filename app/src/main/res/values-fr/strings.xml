@@ -11,4 +11,6 @@
     <string name="txBuff">Chargement de</string>
     <string name="txPlay">Joue</string>
     <string name="txPause">En Pause</string>
+    <string name="text_menu_exit">Quitter</string>
+    <string name="text_menu_about">À propos</string>
 </resources>

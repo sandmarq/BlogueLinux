@@ -71,8 +71,10 @@ public class Player {
     }
 
     public void Release() {
-        mediaPlayer.release();
-        mediaPlayer = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     public boolean isPlaying() {
@@ -83,7 +85,7 @@ public class Player {
         setUrl(url);
     }
 
-    public Player(){
+    public Player() {
 
     }
 }
