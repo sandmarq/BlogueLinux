@@ -14,6 +14,7 @@
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"/>
 
 </LinearLayout>
