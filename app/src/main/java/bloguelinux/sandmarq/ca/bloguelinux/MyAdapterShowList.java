@@ -26,13 +26,9 @@ public class MyAdapterShowList extends ArrayAdapter<ShowsList> {
 
         TextView theTextView1 = (TextView) theView.findViewById(R.id.tvTitle);
         TextView theTextView2 = (TextView) theView.findViewById(R.id.tvDescription);
-        //TextView theTextView3 = (TextView) theView.findViewById(R.id.tvLienMp3);
-        //TextView theTextView4 = (TextView) theView.findViewById(R.id.tvLienOgg);
 
         theTextView1.setText(selectedShow.getTitre());
         theTextView2.setText(selectedShow.getDescription());
-        //theTextView3.setText(selectedShow.getLienMp3());
-        //theTextView4.setText(selectedShow.getLienOgg());
 
         return theView;
     }

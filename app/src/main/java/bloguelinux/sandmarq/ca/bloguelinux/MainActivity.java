@@ -24,28 +24,25 @@ public class MainActivity extends ActionBarActivity {
             new ShowsList("Live", "Live feed", "http://live.bloguelinux.ca/", "http://live.bloguelinux.ca/"),
             new ShowsList("Émission #74 du 18 décembre 2014 – Les dents me pètent dans yeule", "Bonne fête bloguelinux a 3 ans", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_74.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_74.ogg"),
             new ShowsList("L'après CAST – Émission #25 du 14 décembre 2014", "AprèsCast", "http://www.bloguelinux.ca/wp-content/uploads/apres_cast/ap_emission_25.mp3", "http://www.bloguelinux.ca/wp-content/uploads/apres_cast/ap_emission_25.ogg"),
+            new ShowsList("Émission #73 du 4 décembre 2014 – Monté en cabochon", "Expression Québécoise qui veut dire : Quelques que chose qui est fait de façon maladroite, bâclé rapidement ou tout simplement mal fait.", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_73.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_73.ogg"),
+            new ShowsList("Émission #72 du 20 novembre 2014 – Ça pas d’allure", "Expression Québécoise qui veut dire : Expression utilisée souvent par Éric pour pour d’écrire quelque chose d’impressionnant ou qui n’est pas normal (ça n’a pas de bon sens), c’est n’importe quoi.", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_72.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_72.ogg"),
+            new ShowsList("Émission #71 du 6 novembre 2014 – Y a du monde à messe", "Expression Québécoise qui veut dire : Avoir beaucoup de monde, avoir une foule, ou plus de monde que prévu.", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_71.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_71.ogg"),
+            new ShowsList("Émission #70 du 9 octobre 2014 – Miss calembour 2014", "Il ne s’agit pas d’une expression québécoise, mais il faut écouter l »émission pour comprendre ; l’expression fait référence à Sandrine qui fait souvent des jeux de mots qui nous prends un certains temps à comprendre ", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_70.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_70.ogg"),
     };
     private Handler myHandler = new Handler();
     private int statusint;
-    private String url = "http://live.bloguelinux.ca/"; // your URL here
-    private String urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast";
-    private String urlAprescast = "http://feeds.feedburner.com/apres_cast";
+    private String url = "http://live.bloguelinux.ca/", urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast", urlAprescast = "http://feeds.feedburner.com/apres_cast", sTimer, message;
     private Long timer = 0L;
-    private String sTimer;
     private Player mediaPlayer = new Player();
-    private Button bPlay;
-    private Button bPause;
-    private Button bStop;
-    private TextView tvMsg;
-    private String message;
-    private TextView tvTimer;
+    private Button bPlay, bPause, bStop;
+    private TextView tvMsg, tvTimer;
     private ListView lvTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ListAdapter listAdapter = new MyAdapterShowList(this,mlist);
+        final ListAdapter listAdapter = new MyAdapterShowList(this, mlist);
 
         if (savedInstanceState == null) {
             statusint = 0;
@@ -94,14 +91,14 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.menu_exit){
+        } else if (id == R.id.menu_exit) {
             Log.d(TAG, "finish() called");
-            if (mediaPlayer != null){
+            if (mediaPlayer != null) {
                 mediaPlayer.Release();
             }
             myHandler.removeCallbacks(UpdateInterface);
             finish();
-        } else if (id == R.id.menu_about){
+        } else if (id == R.id.menu_about) {
 
             DialogFragment myDialogFragmentAbout = new MyDialogFragmentAbout();
 
@@ -138,6 +135,15 @@ public class MainActivity extends ActionBarActivity {
         message = String.format(getResources().getString(R.string.txOpen) + " " + url);
         Log.d(TAG, "stop() called");
         Log.d(TAG, Integer.toString(statusint));
+    }
+
+    public void setButtons(Boolean setButtonPlay, Boolean setButtonPause, Boolean setButtonStop) {
+        bPlay.setClickable(setButtonPlay);
+        bPlay.setEnabled(setButtonPlay);
+        bPause.setClickable(setButtonPause);
+        bPause.setEnabled(setButtonPause);
+        bStop.setClickable(setButtonStop);
+        bStop.setEnabled(setButtonStop);
     }
 
     @Override
@@ -194,54 +200,28 @@ public class MainActivity extends ActionBarActivity {
 
             switch (statusint) {
                 case 0: // Stop
-                    bPlay.setClickable(true);
-                    bPlay.setEnabled(true);
-                    bPause.setClickable(false);
-                    bPause.setEnabled(false);
-                    bStop.setClickable(false);
-                    bStop.setEnabled(false);
+                    setButtons(true, false, false);
                     break;
                 case 1: // Opening
-                    bPlay.setClickable(false);
-                    bPlay.setEnabled(false);
-                    bPause.setClickable(false);
-                    bPause.setEnabled(false);
-                    bStop.setClickable(true);
-                    bStop.setEnabled(true);
+                    setButtons(false, false, true);
                     tvMsg.setText(message);
                     break;
                 case 2: // buffering
-                    bPlay.setClickable(false);
-                    bPlay.setEnabled(false);
-                    bPause.setClickable(false);
-                    bPause.setEnabled(false);
-                    bStop.setClickable(true);
-                    bStop.setEnabled(true);
+                    setButtons(false, false, true);
                     tvMsg.setText(message);
                     break;
                 case 3: // paused
-                    bPlay.setClickable(false);
-                    bPlay.setEnabled(false);
-                    bPause.setClickable(true);
-                    bPause.setEnabled(true);
-                    bStop.setClickable(true);
-                    bStop.setEnabled(true);
+                    setButtons(false, true, false);
                     tvMsg.setText(message);
                     break;
                 case 4: // playing
-                    bPlay.setClickable(false);
-                    bPlay.setEnabled(false);
-                    bPause.setClickable(true);
-                    bPause.setEnabled(true);
-                    bStop.setClickable(true);
-                    bStop.setEnabled(true);
+                    setButtons(false, true, true);
                     tvMsg.setText(message);
                     break;
             }
 
             if (mediaPlayer.isPlaying()) {
                 timer = timer + 100L;
-                //tvTimer.setText(Long.toString(timer / (1000*60*60)));
             }
             sTimer = String.format("%02d:%02d:%02d",
                     TimeUnit.MILLISECONDS.toHours(timer),

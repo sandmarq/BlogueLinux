@@ -4,10 +4,7 @@ package bloguelinux.sandmarq.ca.bloguelinux;
  * Created by sandrine on 2014-12-23.
  */
 public class ShowsList {
-    private String mTitre;
-    private String mDescription;
-    private String mLienMp3;
-    private String mLienOgg;
+    private String mTitre, mDescription, mLienMp3, mLienOgg;
 
     public ShowsList(String titre, String description, String lienMp3, String lienOgg) {
         mTitre = titre;
