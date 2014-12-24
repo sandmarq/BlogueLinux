@@ -13,4 +13,8 @@
     <string name="txPause">En Pause</string>
     <string name="text_menu_exit">Quitter</string>
     <string name="text_menu_about">À propos</string>
+    <string name="text_about_title">À poppos</string>
+    <string name="text_about_msg">Cet application à été créer par Sandrine Marquis http://sandmarq.ca/ pour http://bloguelinux.ca/</string>
+    <string name="text_about_ok">Biensur que c\'est moi!</string>
+    <string name="text_about_cancel">Comment ce fait-il que tu me dises que ce n\'est pas vrai!</string>
 </resources>

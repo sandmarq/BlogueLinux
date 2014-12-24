@@ -17,6 +17,10 @@
     <string name="txPause">Paused</string>
     <string name="text_menu_exit">Exit</string>
     <string name="text_menu_about">About</string>
+    <string name="text_about_title">About</string>
+    <string name="text_about_msg">This app was created by Sandrine Marquis http://sandmarq.ca/ for http://bloguelinux.ca/</string>
+    <string name="text_about_ok">Sure that\'s me!</string>
+    <string name="text_about_cancel">How come you\'re telling me it\'s not ture!</string>
 
 
 </resources>
