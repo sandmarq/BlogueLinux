@@ -1,6 +1,9 @@
 package bloguelinux.sandmarq.ca.bloguelinux;
 
 import android.app.DialogFragment;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -41,21 +44,23 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final ListAdapter listAdapter = new MyAdapterShowList(this, mlist);
+        Log.d(TAG, "onCreate(Bundle) called");
+        setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
             statusint = 0;
         }
 
-        Log.d(TAG, "onCreate(Bundle) called");
-        setContentView(R.layout.activity_main);
-        bPlay = (Button) findViewById(R.id.bPlay);
-        bPause = (Button) findViewById(R.id.bPause);
-        bStop = (Button) findViewById(R.id.bStop);
-        tvMsg = (TextView) findViewById(R.id.tvMsg);
-        lvTest = (ListView) findViewById(R.id.listView);
-        tvTimer = (TextView) findViewById(R.id.tvTimer);
+        initializeViews();
+
+        initializeListAdapter();
+
+        myHandler.postDelayed(UpdateInterface, 100);
+
+    }
+
+    private void initializeListAdapter() {
+        final ListAdapter listAdapter = new MyAdapterShowList(this, mlist);
 
         lvTest.setAdapter(listAdapter);
 
@@ -70,9 +75,61 @@ public class MainActivity extends ActionBarActivity {
                 message = String.format(getResources().getString(R.string.txPlay) + " " + mlist[position].getTitre());
             }
         });
+    }
 
-        myHandler.postDelayed(UpdateInterface, 100);
+    private void initializeViews() {
+        bPlay = (Button) findViewById(R.id.bPlay);
+        bPause = (Button) findViewById(R.id.bPause);
+        bStop = (Button) findViewById(R.id.bStop);
+        tvMsg = (TextView) findViewById(R.id.tvMsg);
+        lvTest = (ListView) findViewById(R.id.listView);
+        tvTimer = (TextView) findViewById(R.id.tvTimer);
+    }
 
+    public boolean checkConnectionStatus() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    // Status return connection type
+    // 0 = none
+    // 1 = WIFI
+    // 2 = 3G
+    // 3 = WIFI,3G
+    public int checkConnectionType() {
+        int status = 0;
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (checkConnectionStatus()) {
+            NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            boolean isWifiConn = false;
+            if (networkInfo != null) {
+                isWifiConn = networkInfo.isConnected();
+            }
+            if (isWifiConn) {
+                status = 1;
+            }
+
+            boolean isMobileConn = false;
+
+            networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (networkInfo != null) {
+                isMobileConn = networkInfo.isConnected();
+            }
+            if (isMobileConn) {
+                switch (status) {
+                    case 0:
+                        status = 2;
+                        break;
+                    case 1:
+                        status = 3;
+                        break;
+                }
+            }
+            return status;
+        } else {
+            return status;
+        }
     }
 
     @Override
@@ -191,39 +248,49 @@ public class MainActivity extends ActionBarActivity {
     // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
     private Runnable UpdateInterface = new Runnable() {
         public void run() {
-            if (mediaPlayer.isPlaying()) {
-                statusint = 4;
-            } else if (mediaPlayer == null) {
-                statusint = 0;
-            } else {
-                statusint = mediaPlayer.getStatus();
-            }
+            if (checkConnectionStatus()) {
+                lvTest.setFocusable(true);
+                if (mediaPlayer.isPlaying()) {
+                    statusint = 4;
+                } else if (mediaPlayer == null) {
+                    statusint = 0;
+                } else {
+                    statusint = mediaPlayer.getStatus();
+                }
 
-            switch (statusint) {
-                case 0: // Stop
-                    setButtons(true, false, false);
-                    break;
-                case 1: // Opening
-                    setButtons(false, false, true);
-                    tvMsg.setText(message);
-                    break;
-                case 2: // buffering
-                    setButtons(false, false, true);
-                    tvMsg.setText(message);
-                    break;
-                case 3: // paused
-                    setButtons(false, true, false);
-                    tvMsg.setText(message);
-                    break;
-                case 4: // playing
-                    setButtons(false, true, true);
-                    tvMsg.setText(message);
-                    break;
+                switch (statusint) {
+                    case 0: // Stop
+                        setButtons(true, false, false);
+                        break;
+                    case 1: // Opening
+                        setButtons(false, false, true);
+                        tvMsg.setText(message);
+                        break;
+                    case 2: // buffering
+                        setButtons(false, false, true);
+                        tvMsg.setText(message);
+                        break;
+                    case 3: // paused
+                        setButtons(false, true, false);
+                        tvMsg.setText(message);
+                        break;
+                    case 4: // playing
+                        setButtons(false, true, true);
+                        tvMsg.setText(message);
+                        break;
+                }
+            } else  {
+                setButtons(false,false,false);
+                lvTest.setFocusable(false);
+                if (mediaPlayer.getStatus() == 4) {
+                    mediaPlayer.Pause();
+                }
             }
 
             if (mediaPlayer.isPlaying()) {
                 timer = timer + 100L;
             }
+
             sTimer = String.format("%02d:%02d:%02d",
                     TimeUnit.MILLISECONDS.toHours(timer),
                     TimeUnit.MILLISECONDS.toMinutes(timer) -
