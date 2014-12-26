@@ -13,6 +13,10 @@ public class ShowsList {
         mLienOgg = lienOgg;
     }
 
+    public ShowsList(){
+
+    }
+
     public String getTitre() {
         return mTitre;
     }

@@ -72,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         myHandler.postDelayed(UpdateInterface, 100);
+
     }
 
     @Override
