@@ -25,10 +25,7 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "BlogueLinux";
     private static final String KEY_INDEX = "status";
-    // A reference to the local object
-    private MainActivity local;
 
-    /*
     private ShowsList[] mlist = new ShowsList[]{
             new ShowsList("Live", "Live feed", "http://live.bloguelinux.ca/", "http://live.bloguelinux.ca/"),
             new ShowsList("Émission #74 du 18 décembre 2014 – Les dents me pètent dans yeule", "Bonne fête bloguelinux a 3 ans", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_74.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_74.ogg"),
@@ -38,8 +35,7 @@ public class MainActivity extends ActionBarActivity {
             new ShowsList("Émission #71 du 6 novembre 2014 – Y a du monde à messe", "Expression Québécoise qui veut dire : Avoir beaucoup de monde, avoir une foule, ou plus de monde que prévu.", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_71.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_71.ogg"),
             new ShowsList("Émission #70 du 9 octobre 2014 – Miss calembour 2014", "Il ne s’agit pas d’une expression québécoise, mais il faut écouter l »émission pour comprendre ; l’expression fait référence à Sandrine qui fait souvent des jeux de mots qui nous prends un certains temps à comprendre ", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_70.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_70.ogg"),
     };
-    */
-    private ShowsList[] mlist = new ShowsList[]{};
+	
     private Handler myHandler = new Handler();
     private int statusint;
     private String url = "http://live.bloguelinux.ca/", urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast", urlAprescast = "http://feeds.feedburner.com/apres_cast", sTimer, message;
@@ -61,23 +57,12 @@ public class MainActivity extends ActionBarActivity {
 
         initializeViews();
 
-        // Set reference to this activity
-        local = this;
-
-        GetRSSDataTask task = new GetRSSDataTask();
-
-        // Start download RSS task
-        task.execute(urlPodcast);
-
-        // Debug the thread name
-        Log.d(TAG, Thread.currentThread().getName());
-
-        // initializeListAdapter();
+		initializeListAdapter(); 
 
         myHandler.postDelayed(UpdateInterface, 100);
 
     }
-/*
+
     private void initializeListAdapter() {
         final ListAdapter listAdapter = new MyAdapterShowList(this, mlist);
 
@@ -95,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
     }
-*/
+
     private void initializeViews() {
         bPlay = (Button) findViewById(R.id.bPlay);
         bPause = (Button) findViewById(R.id.bPause);
