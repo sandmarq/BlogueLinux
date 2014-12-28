@@ -141,7 +141,7 @@ public class MainActivity extends ActionBarActivity {
         protected List<ShowsList> doInBackground(String... urls) {
 
             // Debug the task thread name
-            Log.d("ITCRssReader", Thread.currentThread().getName());
+            Log.d(TAG, Thread.currentThread().getName());
 
             try {
                 // Create RSS reader
@@ -151,7 +151,7 @@ public class MainActivity extends ActionBarActivity {
                 return rssReader.getItems();
 
             } catch (Exception e) {
-                Log.e("ITCRssReader", e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
 
             return null;
