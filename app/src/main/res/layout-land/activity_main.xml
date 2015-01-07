@@ -22,7 +22,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:text="00:00:00"
         android:layout_toRightOf="@+id/imageView" />
 
@@ -31,7 +30,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:src="@drawable/tux"
         android:text="This is a test"
         android:layout_toRightOf="@+id/imageView"
