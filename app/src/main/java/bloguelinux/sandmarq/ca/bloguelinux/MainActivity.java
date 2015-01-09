@@ -2,6 +2,7 @@ package bloguelinux.sandmarq.ca.bloguelinux;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -372,4 +373,5 @@ public class MainActivity extends ActionBarActivity {
             Log.d(TAG, Integer.toString(statusint));
             statusint = savedInstanceState.getInt(KEY_INDEX, 0);
         }
+
     }

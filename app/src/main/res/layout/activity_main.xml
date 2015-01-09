@@ -10,38 +10,38 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/tux" />
+        android:src="@drawable/tux"
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:id="@+id/tvTimer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="00:00:00" />
+        android:text="00:00:00"
+        android:layout_toRightOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/tvMsg"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTimer"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:src="@drawable/tux"
-        android:text="This is a test" />
+        android:text="This is a test"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_below="@+id/tvTimer" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/bPlay"
-        android:layout_below="@+id/tvMsg"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageView"
+        android:layout_above="@+id/bPlay" />
 
     <Button
         android:id="@+id/bPlay"
