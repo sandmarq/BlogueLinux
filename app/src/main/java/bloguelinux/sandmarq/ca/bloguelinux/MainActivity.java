@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
             new ShowsList("Émission #71 du 6 novembre 2014 – Y a du monde à messe", "Expression Québécoise qui veut dire : Avoir beaucoup de monde, avoir une foule, ou plus de monde que prévu.", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_71.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_71.ogg"),
             new ShowsList("Émission #70 du 9 octobre 2014 – Miss calembour 2014", "Il ne s’agit pas d’une expression québécoise, mais il faut écouter l »émission pour comprendre ; l’expression fait référence à Sandrine qui fait souvent des jeux de mots qui nous prends un certains temps à comprendre ", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_70.mp3", "http://www.bloguelinux.ca/wp-content/uploads/podcast/emission_70.ogg"),
     };
-	
+
     private Handler myHandler = new Handler();
     private int statusint;
     private String url = "http://live.bloguelinux.ca/", urlPodcast = "http://feeds.feedburner.com/Bloguelinux_Podcast", urlAprescast = "http://feeds.feedburner.com/apres_cast", sTimer, message;
@@ -45,6 +45,63 @@ public class MainActivity extends ActionBarActivity {
     private Button bPlay, bPause, bStop;
     private TextView tvMsg, tvTimer;
     private ListView lvTest;
+    // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
+    private Runnable UpdateInterface = new Runnable() {
+        public void run() {
+            if (checkConnectionStatus()) {
+                lvTest.setFocusable(true);
+                if (mediaPlayer.isPlaying()) {
+                    statusint = 4;
+                } else if (mediaPlayer == null) {
+                    statusint = 0;
+                } else {
+                    statusint = mediaPlayer.getStatus();
+                }
+
+                switch (statusint) {
+                    case 0: // Stop
+                        setButtons(true, false, false);
+                        break;
+                    case 1: // Opening
+                        setButtons(false, false, true);
+                        tvMsg.setText(message);
+                        break;
+                    case 2: // buffering
+                        setButtons(false, false, true);
+                        tvMsg.setText(message);
+                        break;
+                    case 3: // paused
+                        setButtons(false, true, false);
+                        tvMsg.setText(message);
+                        break;
+                    case 4: // playing
+                        setButtons(false, true, true);
+                        tvMsg.setText(message);
+                        break;
+                }
+            } else {
+                setButtons(false, false, false);
+                lvTest.setFocusable(false);
+                if (mediaPlayer.getStatus() == 4) {
+                    mediaPlayer.Pause();
+                }
+            }
+
+            if (mediaPlayer.isPlaying()) {
+                timer = timer + 100L;
+            }
+
+            sTimer = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(timer),
+                    TimeUnit.MILLISECONDS.toMinutes(timer) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timer)), // The change is in this line
+                    TimeUnit.MILLISECONDS.toSeconds(timer) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timer)));
+            tvTimer.setText(sTimer);
+
+            myHandler.postDelayed(this, 100);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
 
         initializeViews();
 
-		initializeListAdapter(); 
+        initializeListAdapter();
 
         myHandler.postDelayed(UpdateInterface, 100);
 
@@ -137,6 +194,135 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.menu_exit) {
+            Log.d(TAG, "finish() called");
+            if (mediaPlayer != null) {
+                mediaPlayer.Release();
+            }
+            myHandler.removeCallbacks(UpdateInterface);
+            finish();
+        } else if (id == R.id.menu_about) {
+
+            DialogFragment myDialogFragmentAbout = new MyDialogFragmentAbout();
+
+            myDialogFragmentAbout.show(getFragmentManager(), "theDialogAbout");
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void play(View view) {
+        mediaPlayer.setUrl(url);
+        mediaPlayer.Play();
+        statusint = mediaPlayer.getStatus();
+        message = String.format(getResources().getString(R.string.txPlay) + " " + url);
+        Log.d(TAG, "play() called");
+        Log.d(TAG, Integer.toString(statusint));
+    }
+
+
+    public void pause(View view) {
+        mediaPlayer.Pause();
+        statusint = mediaPlayer.getStatus();
+        message = String.format(getResources().getString(R.string.txPause) + " " + url);
+        Log.d(TAG, "pause() called");
+        Log.d(TAG, Integer.toString(statusint));
+    }
+
+
+    public void stop(View view) {
+        mediaPlayer.Stop();
+        timer = 0L;
+        statusint = mediaPlayer.getStatus();
+        message = String.format(getResources().getString(R.string.txOpen) + " " + url);
+        Log.d(TAG, "stop() called");
+        Log.d(TAG, Integer.toString(statusint));
+    }
+
+    public void setButtons(Boolean setButtonPlay, Boolean setButtonPause, Boolean setButtonStop) {
+        bPlay.setClickable(setButtonPlay);
+        bPlay.setEnabled(setButtonPlay);
+        bPause.setClickable(setButtonPause);
+        bPause.setEnabled(setButtonPause);
+        bStop.setClickable(setButtonStop);
+        bStop.setEnabled(setButtonStop);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+        Log.d(TAG, Integer.toString(statusint));
+        message = String.format(getResources().getString(R.string.txOpen) + " " + url);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+        Log.d(TAG, Integer.toString(statusint));
+        message = String.format(getResources().getString(R.string.txPause) + " " + url);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+        Log.d(TAG, Integer.toString(statusint));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+        Log.d(TAG, Integer.toString(statusint));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isFinishing()) {
+            statusint = mediaPlayer.getStatus();
+            Log.d(TAG, "onDestroyed() called");
+            Log.d(TAG, Integer.toString(statusint));
+            mediaPlayer.Release();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        Log.d(TAG, Integer.toString(statusint));
+        savedInstanceState.putInt(KEY_INDEX, statusint);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i(TAG, "onRestoreInstanceState");
+        Log.d(TAG, Integer.toString(statusint));
+        statusint = savedInstanceState.getInt(KEY_INDEX, 0);
+    }
+
     private class GetRSSDataTask extends AsyncTask<String, Void, List<ShowsList>> {
         @Override
         protected List<ShowsList> doInBackground(String... urls) {
@@ -157,6 +343,7 @@ public class MainActivity extends ActionBarActivity {
 
             return null;
         }
+
         @Override
         protected void onPostExecute(List<ShowsList> result) {
 
@@ -186,192 +373,4 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-
-        @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
-            // Inflate the menu; this adds items to the action bar if it is present.
-            getMenuInflater().inflate(R.menu.menu_main, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            // Handle action bar item clicks here. The action bar will
-            // automatically handle clicks on the Home/Up button, so long
-            // as you specify a parent activity in AndroidManifest.xml.
-            int id = item.getItemId();
-
-            //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
-            } else if (id == R.id.menu_exit) {
-                Log.d(TAG, "finish() called");
-                if (mediaPlayer != null) {
-                    mediaPlayer.Release();
-                }
-                myHandler.removeCallbacks(UpdateInterface);
-                finish();
-            } else if (id == R.id.menu_about) {
-
-                DialogFragment myDialogFragmentAbout = new MyDialogFragmentAbout();
-
-                myDialogFragmentAbout.show(getFragmentManager(), "theDialogAbout");
-
-            }
-
-            return super.onOptionsItemSelected(item);
-        }
-
-        public void play(View view) {
-            mediaPlayer.setUrl(url);
-            mediaPlayer.Play();
-            statusint = mediaPlayer.getStatus();
-            message = String.format(getResources().getString(R.string.txPlay) + " " + url);
-            Log.d(TAG, "play() called");
-            Log.d(TAG, Integer.toString(statusint));
-        }
-
-
-        public void pause(View view) {
-            mediaPlayer.Pause();
-            statusint = mediaPlayer.getStatus();
-            message = String.format(getResources().getString(R.string.txPause) + " " + url);
-            Log.d(TAG, "pause() called");
-            Log.d(TAG, Integer.toString(statusint));
-        }
-
-
-        public void stop(View view) {
-            mediaPlayer.Stop();
-            timer = 0L;
-            statusint = mediaPlayer.getStatus();
-            message = String.format(getResources().getString(R.string.txOpen) + " " + url);
-            Log.d(TAG, "stop() called");
-            Log.d(TAG, Integer.toString(statusint));
-        }
-
-        public void setButtons(Boolean setButtonPlay, Boolean setButtonPause, Boolean setButtonStop) {
-            bPlay.setClickable(setButtonPlay);
-            bPlay.setEnabled(setButtonPlay);
-            bPause.setClickable(setButtonPause);
-            bPause.setEnabled(setButtonPause);
-            bStop.setClickable(setButtonStop);
-            bStop.setEnabled(setButtonStop);
-        }
-
-        @Override
-        public void onStart() {
-            super.onStart();
-            Log.d(TAG, "onStart() called");
-            Log.d(TAG, Integer.toString(statusint));
-            message = String.format(getResources().getString(R.string.txOpen) + " " + url);
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            Log.d(TAG, "onPause() called");
-            Log.d(TAG, Integer.toString(statusint));
-            message = String.format(getResources().getString(R.string.txPause) + " " + url);
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            Log.d(TAG, "onResume() called");
-            Log.d(TAG, Integer.toString(statusint));
-        }
-
-        @Override
-        public void onStop() {
-            super.onStop();
-            Log.d(TAG, "onStop() called");
-            Log.d(TAG, Integer.toString(statusint));
-        }
-
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            if (isFinishing()) {
-                statusint = mediaPlayer.getStatus();
-                Log.d(TAG, "onDestroyed() called");
-                Log.d(TAG, Integer.toString(statusint));
-                mediaPlayer.Release();
-            }
-        }
-
-        // 0 : Stop, 1 : opening, 2 : buffering, 3 : paused, 4 : Playing
-        private Runnable UpdateInterface = new Runnable() {
-            public void run() {
-                if (checkConnectionStatus()) {
-                    lvTest.setFocusable(true);
-                    if (mediaPlayer.isPlaying()) {
-                        statusint = 4;
-                    } else if (mediaPlayer == null) {
-                        statusint = 0;
-                    } else {
-                        statusint = mediaPlayer.getStatus();
-                    }
-
-                    switch (statusint) {
-                        case 0: // Stop
-                            setButtons(true, false, false);
-                            break;
-                        case 1: // Opening
-                            setButtons(false, false, true);
-                            tvMsg.setText(message);
-                            break;
-                        case 2: // buffering
-                            setButtons(false, false, true);
-                            tvMsg.setText(message);
-                            break;
-                        case 3: // paused
-                            setButtons(false, true, false);
-                            tvMsg.setText(message);
-                            break;
-                        case 4: // playing
-                            setButtons(false, true, true);
-                            tvMsg.setText(message);
-                            break;
-                    }
-                } else {
-                    setButtons(false, false, false);
-                    lvTest.setFocusable(false);
-                    if (mediaPlayer.getStatus() == 4) {
-                        mediaPlayer.Pause();
-                    }
-                }
-
-                if (mediaPlayer.isPlaying()) {
-                    timer = timer + 100L;
-                }
-
-                sTimer = String.format("%02d:%02d:%02d",
-                        TimeUnit.MILLISECONDS.toHours(timer),
-                        TimeUnit.MILLISECONDS.toMinutes(timer) -
-                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timer)), // The change is in this line
-                        TimeUnit.MILLISECONDS.toSeconds(timer) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timer)));
-                tvTimer.setText(sTimer);
-
-                myHandler.postDelayed(this, 100);
-            }
-        };
-
-        @Override
-        public void onSaveInstanceState(Bundle savedInstanceState) {
-            super.onSaveInstanceState(savedInstanceState);
-            Log.i(TAG, "onSaveInstanceState");
-            Log.d(TAG, Integer.toString(statusint));
-            savedInstanceState.putInt(KEY_INDEX, statusint);
-        }
-
-        @Override
-        protected void onRestoreInstanceState(Bundle savedInstanceState) {
-            super.onRestoreInstanceState(savedInstanceState);
-            Log.i(TAG, "onRestoreInstanceState");
-            Log.d(TAG, Integer.toString(statusint));
-            statusint = savedInstanceState.getInt(KEY_INDEX, 0);
-        }
-
-    }
+}
